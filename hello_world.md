@@ -1,6 +1,6 @@
 A) Create a new boilerplate (with provider=aws, runtime=python3)
 ```
-my-serverless-project>$ sls create --template aws-python3 --name <my-serverless-project>
+my-serverless-project>$ serverless create --template aws-python3 --name <my-serverless-project>
 ```
 
 Params
