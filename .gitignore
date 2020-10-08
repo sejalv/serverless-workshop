@@ -19,3 +19,13 @@ var/
 
 # Serverless directories
 .serverless
+
+# Custom
+venv/
+node_modules/
+.idea/
+localstack-temp/
+localstacktemp/
+*.pyc
+.DS_Store
+*.pytest_cache/

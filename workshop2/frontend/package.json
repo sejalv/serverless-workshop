@@ -1,0 +1,45 @@
+{
+  "name": "serverless-boilerplate",
+  "version": "2.0.0",
+  "description": "basic boilerplate with offline development setup",
+  "main": "index.js",
+  "dependencies": {
+    "gulp": "4.0.2",
+    "gulp-exec": "4.0.0",
+    "gulp-sequence": "1.0.0",
+    "gulp-util": "3.0.8",
+    "i": "0.3.6",
+    "node-gyp": "^6.0.1",
+    "node-sass": "^4.13.0",
+    "yarn": "^1.21.1"
+  },
+  "scripts": {
+    "preinstall": "cd web && npm install",
+    "postinstall": "cd api && cd todo && npm install",
+    "db-setup": "cd api && cd todo && sls dynamodb install",
+    "db-remove": "cd api && cd todo && sls dynamodb remove",
+    "predeploy-s3": "cd web && npm run build",
+    "deploy-s3": "cd web && aws s3 --profile default sync ./build/ s3://todo.sejalv.online --region eu-west-1",
+    "app": "gulp serve",
+    "homepage": "http://todo.sejalv.online.s3-website-eu-west-1.amazonaws.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mjzone/serverless-boilerplate.git"
+  },
+  "keywords": [
+    "serverless",
+    "boilerplate",
+    "aws",
+    "offline"
+  ],
+  "author": "Manoj Fernando <manojf@99x.lk>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mjzone/serverless-boilerplate/issues"
+  },
+  "homepage": "https://github.com/mjzone/serverless-boilerplate#readme",
+  "devDependencies": {
+    "fsevents": "^2.1.2"
+  }
+}

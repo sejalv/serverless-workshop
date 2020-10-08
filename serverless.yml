@@ -1,0 +1,90 @@
+service: serverless-workshop-rest-ddb
+
+# frameworkVersion: ">=1.1.0 <2.0.0"
+
+provider:
+  name: aws
+  runtime: python3.7
+  stage: ${opt:stage}
+  region: eu-central-1
+  profile: ${opt:profile, "sdp-${self:provider.stage}"}
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { 'Fn::Join': [':', ['arn:aws:dynamodb:${self:provider.region}*', { Ref: 'AWS::AccountId' }, 'table/${self:provider.environment.DYNAMODB_TABLE}']] }
+
+package:
+#  individually: true
+  exclude:
+    - Dockerfile
+    - docker-compose.yml
+    - app/tests/**
+
+functions:
+  create:
+    handler: app/create.handler
+    events:
+      - http:
+          path: todos
+          method: post
+          cors: true
+
+  list:
+    handler: app/list.handler
+    events:
+      - http:
+          path: todos
+          method: get
+          cors: true
+
+  get:
+    handler: app/get.handler
+    events:
+      - http:
+          path: todos/{id}
+          method: get
+          cors: true
+
+  update:
+    handler: app/update.handler
+    events:
+      - http:
+          path: todos/{id}
+          method: put
+          cors: true
+
+  delete:
+    handler: app/delete.handler
+    events:
+      - http:
+          path: todos/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    TodosDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}
