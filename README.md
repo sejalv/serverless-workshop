@@ -8,7 +8,7 @@ authorName: 'Sejal Vaidya'
 
 ## Workshops
 
-1. [https://github.com/sejalv/serverless-workshop/blob/master/hello_world.md](**Hello World**): Basic project setup, test and deployment.
+1. [**Hello World**](https://github.com/sejalv/serverless-workshop/blob/master/hello_world.md): Basic project setup, test and deployment.
 2. **Todos app**: CRUD application with a dockerized environment to test AWS services locally. Python for services and DynamoDB for database.
 
 ## Project Structure:
@@ -22,9 +22,9 @@ authorName: 'Sejal Vaidya'
 npm install -g serverless
 ```
 
-**Detailed Setup Instructions**: [https://github.com/sejalv/serverless-workshop/blob/master/setup.md](setup)
+**Detailed Setup Instructions**: [setup](https://github.com/sejalv/serverless-workshop/blob/master/setup.md)
 
-**Application/Service Configuration**: 
+**Application/Service Configuration**: [serverless.yml](https://github.com/sejalv/serverless-workshop/blob/master/serverless.yml)
 
 ## Dev Env (Localstack + Docker)
 
