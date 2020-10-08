@@ -1,7 +1,4 @@
 <!--
-title: 'AWS Serverless REST API with DynamoDB store example in Python'
-description: 'This example demonstrates how to setup a RESTful Web Service allowing you to create, list, get, update and delete Todos. DynamoDB is used to store the data.'
-layout: Doc
 platform: AWS
 language: Python
 authorLink: 'https://github.com/sejalv'
@@ -9,19 +6,25 @@ authorName: 'Sejal Vaidya'
 -->
 # Serverless REST + DDB Workshop
 
+## Workshops
 
-## Structure
+1. [https://github.com/sejalv/serverless-workshop/blob/master/hello_world.md](**Hello World**): Basic project setup, test and deployment.
+2. **Todos app**: CRUD application with a dockerized environment to test AWS services locally. Python for services and DynamoDB for database.
 
-This service has a separate directory for all the todo operations. For each operation exactly one file exists e.g. `todos/delete.py`. In each of these files there is exactly one function defined.
+## Project Structure:
 
-The idea behind the `todos` directory is that in case you want to create a service containing multiple resources e.g. users, notes, comments you could do so in the same service. While this is certainly possible you might consider creating a separate service for each resource. It depends on the use-case and your preference.
-
+* Each CRUD operation (create, retrieve/get, update, delete) is performed by AWS Lambda, and associated with an API endpoint. Each of the lambda handlers are present in the `app` directory.
+* Tests are present in the `app/tests/` directory. Also includes `conftest.py` for `pytest` *fixtures*, that help in mocking or configuring your environment. 
 
 ## Setup
 
 ```bash
 npm install -g serverless
 ```
+
+**Detailed Setup Instructions**: [https://github.com/sejalv/serverless-workshop/blob/master/setup.md](setup)
+
+**Application/Service Configuration**: 
 
 ## Dev Env (Localstack + Docker)
 
@@ -31,8 +34,10 @@ npm install -g serverless
 
 ### Tests
 ```docker-compose run app pytest tests/ -s -vv ```
+On the container for `app`, all the tests located within the `app/tests/` directory will run. This will also generate the AWS environment locally, via `app/tests/conftest.py` (eg. `ddb_tbl` fixture creates the DDB table `serverless-workshop-rest-ddb-test`).
 
 ```aws --endpoint-url=http://localhost:4566 ddb select  serverless-workshop-rest-ddb-test```
+Querying locally to check if the table is created. Also, creates an entry from the `test_create.py` test.
 
 
 ## Deploy
@@ -47,7 +52,7 @@ npm install -g serverless
 In order to deploy the endpoint simply run
 
 ```bash
-serverless deploy --stage dev
+serverless deploy --stage <dev/stg>
 ```
 
 The expected result should be similar to:
@@ -103,7 +108,7 @@ curl https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos
 
 Example output:
 ```bash
-[{"text":"Deploy my first service","id":"ac90feaa11e6-9ede-afdfa051af86","checked":true,"updatedAt":1479139961304},{"text":"Learn Serverless","id":"206793aa11e6-9ede-afdfa051af86","createdAt":1479139943241,"checked":false,"updatedAt":1479139943241}]%
+[{"text":"Deploy my first service","id":"ac90feaa11e6-9ede-afdfa051af86","checked":true,"updatedAt":},{"text":"Learn Serverless","id":"206793aa11e6-9ede-afdfa051af86","createdAt":,"checked":false,"updatedAt":}]%
 ```
 
 ### Get one Todo
@@ -115,7 +120,7 @@ curl https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos/<id>
 
 Example Result:
 ```bash
-{"text":"Learn Serverless","id":"ee6490d0-aa11e6-9ede-afdfa051af86","createdAt":1479138570824,"checked":false,"updatedAt":1479138570824}%
+{"text":"Learn Serverless","id":"ee6490d0-aa11e6-9ede-afdfa051af86","createdAt":,"checked":false,"updatedAt":}%
 ```
 
 ### Update a Todo
@@ -127,7 +132,7 @@ curl -X PUT https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos/<id> -
 
 Example Result:
 ```bash
-{"text":"Learn Serverless","id":"ee6490d0-aa11e6-9ede-afdfa051af86","createdAt":1479138570824,"checked":true,"updatedAt":1479138570824}%
+{"text":"Learn Serverless","id":"ee6490d0-aa11e6-9ede-afdfa051af86","createdAt":,"checked":true,"updatedAt":}%
 ```
 
 ### Delete a Todo
