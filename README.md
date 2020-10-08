@@ -7,7 +7,7 @@ language: Python
 authorLink: 'https://github.com/sejalv'
 authorName: 'Sejal Vaidya'
 -->
-# Serverless REST API
+# Serverless REST + DDB Workshop
 
 
 ## Structure
