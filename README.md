@@ -61,7 +61,7 @@ Mono-repo style, i.e. service + IaaC
 ```docker-compose up``` 
 
 [LocalStack](https://github.com/localstack/localstack), an open-source that mimics AWS enviroment closely on your local setup,
-is used in combination with [`lambdaci`](https://hub.docker.com/r/lambci/lambda/)'s Docker image to run and test the service locally.
+is used in combination with [`lambci`](https://hub.docker.com/r/lambci/lambda/)'s Docker image to run and test the service locally.
 
 
 ### 5. Tests
