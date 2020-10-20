@@ -120,7 +120,7 @@ functions:
 ```
 
 
-## Usage
+### 7. Usage (Post-Deployment)
 
 You can create, retrieve, update, or delete todos with the following commands:
 
@@ -183,7 +183,7 @@ curl -X DELETE https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos/<id
 No output
 
 
-### 7. Finally, destroy
+### 8. Finally, destroy
 
 ```bash
 serverless destroy --stage <dev/stg>
