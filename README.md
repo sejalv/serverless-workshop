@@ -34,11 +34,11 @@ Mono-repo style, i.e. service + IaaC
     ├── delete.py
     ├── get.py
     ├── list.py
+    ├── update.py
     ├── tests
     │   ├── __init__.py
     │   ├── conftest.py
     │   └── test_create.py
-    ├── update.py
     └── utils
         ├── __init__.py
         ├── config.py
@@ -52,7 +52,11 @@ Mono-repo style, i.e. service + IaaC
 
 * `app/`: Each CRUD function (create, retrieve/get, update, delete) is executed by AWS Lambda, and associated with an API endpoint.
 * `app/tests/`: Tests for Lambda handlers. Also includes `conftest.py` for `pytest` *fixtures*, that help in mocking or configuring your environment. 
+* `app/utils/`: Helpers functions
 * `serverless.yml`: Serverless configuration for the service (or `app`). Includes IaaC to generate AWS components (`resources`), and attach `functions` for Lambda handlers, among other things.
+* `docker-compose.yml`: includes 
+    * the default template from [LocalStack](https://github.com/localstack/localstack), an open-source framework that mimics AWS enviroment closely on your local setup
+    * the build using [`lambci`](https://hub.docker.com/r/lambci/lambda/)'s Docker image to run and test the service locally.
 
 ### 4. Starting the Dev environment
 
@@ -60,9 +64,7 @@ Mono-repo style, i.e. service + IaaC
 
 ```docker-compose up``` 
 
-[LocalStack](https://github.com/localstack/localstack), an open-source that mimics AWS enviroment closely on your local setup,
-is used in combination with [`lambci`](https://hub.docker.com/r/lambci/lambda/)'s Docker image to run and test the service locally.
-
+NOTE: Build only if there's any change.
 
 ### 5. Tests
 ```docker-compose run app pytest tests/ -s -vv ```
@@ -88,7 +90,7 @@ In order to deploy the endpoint simply run
 ```bash
 serverless deploy --stage <dev/stg>
 ```
-
+This converts your `serverless.yml` config to a `CloudFormation` stack, and packages your service and dependencies 
 The expected result should be similar to:
 
 ```bash
@@ -184,6 +186,7 @@ No output
 
 
 ### 8. Finally, destroy
+Don't forget to remove the app from your AWS environment. Here's a clean way to do it with `serverless`
 
 ```bash
 serverless destroy --stage <dev/stg>
