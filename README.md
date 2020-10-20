@@ -70,6 +70,7 @@ is used in combination with [`lambdaci`](https://hub.docker.com/r/lambci/lambda/
 On the container for `app`, all the tests located within the `app/tests/` directory will run. This will also generate the AWS resources locally, via `app/tests/conftest.py` (eg. `ddb_tbl` fixture creates the DDB table `serverless-workshop-rest-ddb-test`).
 
 ```aws --endpoint-url=http://localhost:4566 ddb select  serverless-workshop-rest-ddb-test```
+
 Querying locally to check if the table is created. Also, creates an entry from the `test_create.py` test.
 
 
@@ -77,9 +78,9 @@ Querying locally to check if the table is created. Also, creates an entry from t
 
 **Optional Setup**:
 
-`aws sso login --profile <profile-name>`
+```aws sso login --profile <profile-name>```
 
-`yawsso`
+```yawsso```
 
 
 In order to deploy the endpoint simply run
