@@ -4,43 +4,76 @@ language: Python
 authorLink: 'https://github.com/sejalv'
 authorName: 'Sejal Vaidya'
 -->
-# Serverless REST + DDB Workshop
+## Serverless REST + DDB Workshop
 
-## Workshops
+### 1. Initial Setup
 
-1. [**Hello World**](https://github.com/sejalv/serverless-workshop/blob/master/hello_world.md): Basic project setup, test and deployment.
-2. **Todos app**: CRUD application with a dockerized environment to test AWS services locally. Python for services and DynamoDB for database.
-
-## Project Structure:
-
-* Each CRUD operation (create, retrieve/get, update, delete) is performed by AWS Lambda, and associated with an API endpoint. Each of the lambda handlers are present in the `app` directory.
-* Tests are present in the `app/tests/` directory. Also includes `conftest.py` for `pytest` *fixtures*, that help in mocking or configuring your environment. 
-
-## Setup
+**Quick Setup** (prereq: `npm`)
 
 ```bash
 npm install -g serverless
 ```
 
-**Detailed Setup Instructions**: [setup](https://github.com/sejalv/serverless-workshop/blob/master/setup.md)
+Detailed Setup Instructions [here](https://github.com/sejalv/serverless-workshop/blob/master/setup.md)
 
-**Application/Service Configuration**: [serverless.yml](https://github.com/sejalv/serverless-workshop/blob/master/serverless.yml)
+### 2. Hello World Tutorial
 
-## Dev Env (Localstack + Docker)
+[Basic project setup, test and deployment](https://github.com/sejalv/serverless-workshop/blob/master/hello_world.md)
+
+### 3. Todos app
+
+A CRUD application with a dockerized environment to test AWS services locally. Python for services and DynamoDB for database.
+
+#### Project Structure:
+
+Mono-repo style, i.e. service + IaaC
+```
+├──app/
+    ├── __init__.py
+    ├── create.py
+    ├── delete.py
+    ├── get.py
+    ├── list.py
+    ├── tests
+    │   ├── __init__.py
+    │   ├── conftest.py
+    │   └── test_create.py
+    ├── update.py
+    └── utils
+        ├── __init__.py
+        ├── config.py
+        └── helpers.py
+├──.env
+├──Dockerfile
+├──docker-compose.yml
+├──requirements.txt
+├──serverless.yml
+```
+
+* `app/`: Each CRUD function (create, retrieve/get, update, delete) is executed by AWS Lambda, and associated with an API endpoint.
+* `app/tests/`: Tests for Lambda handlers. Also includes `conftest.py` for `pytest` *fixtures*, that help in mocking or configuring your environment. 
+* `serverless.yml`: Serverless configuration for the service (or `app`). Includes IaaC to generate AWS components (`resources`), and attach `functions` for Lambda handlers, among other things.
+
+### 4. Starting the Dev environment
 
 ```docker-compose build```
 
 ```docker-compose up``` 
 
-### Tests
+[LocalStack](https://github.com/localstack/localstack), an open-source that mimics AWS enviroment closely on your local setup,
+is used in combination with [`lambdaci`](https://hub.docker.com/r/lambci/lambda/)'s Docker image to run and test the service locally.
+
+
+### 5. Tests
 ```docker-compose run app pytest tests/ -s -vv ```
-On the container for `app`, all the tests located within the `app/tests/` directory will run. This will also generate the AWS environment locally, via `app/tests/conftest.py` (eg. `ddb_tbl` fixture creates the DDB table `serverless-workshop-rest-ddb-test`).
+
+On the container for `app`, all the tests located within the `app/tests/` directory will run. This will also generate the AWS resources locally, via `app/tests/conftest.py` (eg. `ddb_tbl` fixture creates the DDB table `serverless-workshop-rest-ddb-test`).
 
 ```aws --endpoint-url=http://localhost:4566 ddb select  serverless-workshop-rest-ddb-test```
 Querying locally to check if the table is created. Also, creates an entry from the `test_create.py` test.
 
 
-## Deploy
+### 6. Deploy
 
 **Optional Setup**:
 
@@ -148,13 +181,22 @@ curl -X DELETE https://XXXXXXX.execute-api.us-east-1.amazonaws.com/dev/todos/<id
 
 No output
 
-## Scaling
 
-### AWS Lambda
+### 7. Finally, destroy
+
+```bash
+serverless destroy --stage <dev/stg>
+```
+
+## Further Enhancements
+
+### Scaling
+
+#### AWS Lambda
 
 By default, AWS Lambda limits the total concurrent executions across all functions within a given region to 100. The default limit is a safety limit that protects you from costs due to potential runaway or recursive functions during initial development and testing. To increase this limit above the default, follow the steps in [To request a limit increase for concurrent executions](http://docs.aws.amazon.com/lambda/latest/dg/concurrent-executions.html#increase-concurrent-executions-limit).
 
-### DynamoDB
+#### DynamoDB
 
 When you create a table, you specify how much provisioned throughput capacity you want to reserve for reads and writes. DynamoDB will reserve the necessary resources to meet your throughput needs while ensuring consistent, low-latency performance. You can change the provisioned throughput and increasing or decreasing capacity as needed.
 
